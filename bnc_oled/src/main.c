@@ -1,4 +1,4 @@
-/*****************************************************************************
+﻿/*****************************************************************************
  *   Peripherals such as temp sensor, light sensor, accelerometer,
  *   and trim potentiometer are monitored and values are written to
  *   the OLED display.
@@ -189,6 +189,7 @@ void Timer_init(uint32_t time)
 	TIM_Cmd(LPC_TIM0,ENABLE);
 	while ( !(TIM_GetIntStatus(LPC_TIM0,0)));
 		TIM_ClearIntPending(LPC_TIM0,0);
+	//habilita a interrupção
 	NVIC_EnableIRQ(TIMER0_IRQn);
 }
 
@@ -277,7 +278,7 @@ void TIMER0_IRQHandler(){
 	    xoff = 0-x;
 	    yoff = 0-y;
 	    zoff = 64-z;
-
+	//desabilita a interrupção
 	NVIC_DisableIRQ(TIMER0_IRQn);
 	 // Leitura do aceleromêtro
 	 acc_read(&x, &y, &z);
@@ -305,9 +306,10 @@ void TIMER0_IRQHandler(){
 	        oled_fillRect((1+9*6),41, 80, 48, OLED_COLOR_WHITE);
 	        oled_putString((1+9*6),41, buf, OLED_COLOR_BLACK, OLED_COLOR_WHITE);
 
-
+		
 	        if(luz==0)
 	        {
+			chama a função para alterar o valor mostrado no display de 7 segmentos
 	        	change7Seg();
 	        }
 	        else
